@@ -397,6 +397,7 @@ end
 local function resolveItem(label, amount, intermediates)
     local found_recipes = {}
     local selected_recipe = nil
+    local steps = {}
     for _, recipe in ipairs(recipes) do
         for _, output in ipairs(recipe.outputs) do
             if output.label == label then
@@ -424,7 +425,6 @@ local function resolveItem(label, amount, intermediates)
         selected_recipe = found_recipes[1]
     end
     if selected_recipe then
-        local steps = {}
         for _, input in ipairs(selected_recipe.inputs) do
             local needed_amount = nil
             if input.consumed then
@@ -443,6 +443,7 @@ local function resolveItem(label, amount, intermediates)
             tier=selected_recipe.tier
         })
     end
+    return steps
 end
 
 local function produceOutput()
