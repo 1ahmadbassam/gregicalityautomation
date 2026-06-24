@@ -58,6 +58,18 @@ local function capitalize(s, delim)
     return s
 end
 
+local function printTable(t, indent)
+    indent = indent or ""
+    for key, value in pairs(t) do
+        if type(value) == "table" then
+            print(indent .. key .. ":")
+            printTable(value, indent .. "  ")
+        else
+            print(indent .. key .. ": " .. tostring(value))
+        end
+    end
+end
+
 --- Components
 local xnet = component.xnet
 local inv = component.inventory_controller
@@ -330,7 +342,7 @@ local function addRecipe()
                 local amount = tonumber(io.read())
                 io.write("Input Consumed (Y/N) (default: Y)? ")
                 local consumed = io.read()
-                table.insert(recipe.inputs, {label=label, amount=amount, consumed=consumed:lower() == "y"})
+                table.insert(recipe.inputs, {label=label, amount=amount, consumed=(consumed == "" or consumed:lower() == "y")})
                 io.write("More Inputs (Y/N)? ")
                 more = io.read():lower() == "y"
             end
@@ -442,6 +454,7 @@ local function produceOutput()
     io.write("Use intermediates in storage (Y/N) (default: Y) ? ")
     local intermediates = io.read():lower() == "y"
     local tree = resolveItem(label, amount, intermediates)
+    printTable(tree)
 end
 
 -- local function produceOutput()
